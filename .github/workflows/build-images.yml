@@ -38,9 +38,6 @@ jobs:
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - run: pwd
-      - run: ls -lah
-
       - uses: actions/upload-artifact@v3
         with:
           name: repo-artifact
@@ -53,27 +50,15 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - run: |
-          pwd
-          ls -lah
-
       - uses: actions/download-artifact@v3
         with:
           name: repo-artifact
           path: ./meta
 
-      - run: |
-          pwd
-          ls -lah
-
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ./meta
-
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
-          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
+          SEMVER_TAG: ${{ inputs.SERVICE1_REF }}
           DOCKERFILE_PATH: ./meta/service1/Dockerfile
           IMAGE_NAME: service1
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -84,28 +69,16 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout Sandbox
-        uses: actions/checkout@v3
-        with:
-          repository: tleerai/sandbox
 
       - uses: actions/download-artifact@v3
         with:
           name: repo-artifact
           path: ./meta
 
-#      - name: Display structure of downloaded files
-#        run: ls -R
-#        working-directory: ./meta
-
-      - run: ls -lah
-      - run: pwd
-      - run: ls -lah ${{ github.workspace }}
-
       - id: build_image_action
-        uses: ./.github/actions/build-image
+        uses: tleerai/sandbox/.github/actions/build-image@main
         with:
-          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
+          SEMVER_TAG: ${{ inputs.SERVICE2_REF }}
           DOCKERFILE_PATH: ./meta/service2/Dockerfile
           IMAGE_NAME: service2
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
