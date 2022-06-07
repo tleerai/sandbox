@@ -49,6 +49,7 @@ jobs:
 
   service1:
     name: Service1
+    needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout # Is this a checkout for the action or for the dockerfile or both?
