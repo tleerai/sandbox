@@ -97,7 +97,7 @@ jobs:
       - run: ls -lah ${{ github.workspace }}
 
       - id: build_image_action
-        uses: ../.github/actions/build-image
+        uses: ./.github/actions/build-image
         with:
           SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
           DOCKERFILE_PATH: ./meta/service2/Dockerfile
