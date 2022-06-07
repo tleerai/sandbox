@@ -18,8 +18,8 @@ on:
         required: true
 
 jobs:
-  service1:
-    name: Service1
+  clone_repos:
+    name: Clone Repos
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -30,14 +30,6 @@ jobs:
           path: ./service1
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - run: ls -lah
-      - run: pwd
-      - run: ls -lah ./service1
-
-  service2:
-    name: Service2
-    runs-on: ubuntu-20.04
-    steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
