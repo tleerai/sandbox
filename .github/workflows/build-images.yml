@@ -87,10 +87,15 @@ jobs:
           name: repo-artifact
           path: ./meta
 
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ./meta
+#      - name: Display structure of downloaded files
+#        run: ls -R
+#        working-directory: ./meta
+
       - run: ls -lah
+      - run: pwd
+      - run: ls -lah
+      - run: ls -lah ${{ github.workspace }}
+
       - id: build_image_action
         uses: ../.github/actions/build-image
         with:
