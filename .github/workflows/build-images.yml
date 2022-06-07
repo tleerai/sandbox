@@ -39,7 +39,8 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - run: pwd
-      - run: ls -lah ~
+      - run: ls -lah
+      - run: ls -lah ${{ github.workspace }}
 
       - uses: actions/upload-artifact@v3
         with:
@@ -52,11 +53,8 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout # Is this a checkout for the action or for the dockerfile or both?
+      - name: Checkout
         uses: actions/checkout@v3
-#        with:
-#          ref: ${{ inputs.SEMVER_TAG }}
-
 
       - uses: actions/download-artifact@v3
         with:
@@ -67,20 +65,37 @@ jobs:
         run: ls -R
         working-directory: ./meta
 
-#      - id: build_image_action
-#        uses: ./.github/actions/build-image
-#        with:
-#          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
-#          DOCKERFILE_PATH: ./gaize/dockerfiles/gaize/Dockerfile-meta
-#          IMAGE_NAME: gaize
-#          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-#          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      - id: build_image_action
+        uses: ./.github/actions/build-image
+        with:
+          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
+          DOCKERFILE_PATH: ./meta/service1/Dockerfile
+          IMAGE_NAME: service1
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - id: build_image_action
-#        uses: ./.github/actions/build-image
-#        with:
-#          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
-#          DOCKERFILE_PATH: ./gaize/dockerfiles/gaize/Dockerfile-meta
-#          IMAGE_NAME: gaize
-#          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-#          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  service2:
+    name: Service2
+    needs: clone_repos
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: repo-artifact
+          path: ./meta
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ./meta
+
+      - id: build_image_action
+        uses: ./.github/actions/build-image
+        with:
+          SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
+          DOCKERFILE_PATH: ./meta/service2/Dockerfile
+          IMAGE_NAME: service2
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
