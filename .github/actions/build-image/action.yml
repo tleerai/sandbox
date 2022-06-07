@@ -1,0 +1,36 @@
+name: "Set Image Tag"
+description: "Sets the image to use for the docker image"
+inputs:
+  SEMVER_TAG:
+    required: true
+    description: "The Git SHA or tag to checkout"
+  DOCKERFILE_PATH:
+    required: true
+    description: "That path to the Dockerfile"
+  IMAGE_NAME:
+    required: true
+    description: "The name the image will be given"
+  DOCKERHUB_USERNAME:
+    required: true
+    description: "Username for logging into dockerhub"
+  DOCKERHUB_TOKEN:
+    required: true
+    description: "Personal Access token for logging into dockerhub"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Login to Dockerhub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ inputs.DOCKERHUB_USERNAME }}
+        password: ${{ inputs.DOCKERHUB_TOKEN }}
+
+    - name: Build Image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ${{ inputs.DOCKERFILE_PATH }}
+        push: true
+        tags: "radiusaiinc/${{ inputs.IMAGE_NAME }}:${{ inputs.SEMVER_TAG }}"
+
