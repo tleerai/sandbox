@@ -24,9 +24,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Checkout
-        uses: actions/checkout@v3
         with:
           repository: tleerai/service1
           ref: ${{ inputs.SERVICE1_REF }}
@@ -43,9 +40,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Checkout
-        uses: actions/checkout@v3
         with:
           repository: tleerai/service2
           ref: ${{ inputs.SERVICE2_REF }}
@@ -55,6 +49,7 @@ jobs:
       - run: ls -lah
       - run: pwd
       - run: ls -lah ./service2
+      - run: ls -lah ../
 
 #      - id: build_image_action
 #        uses: ./.github/actions/build-image
