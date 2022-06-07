@@ -78,7 +78,7 @@ jobs:
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
-          SEMVER_TAG: ${{ inputs.SERVICE2_REF }}
+          DOCKER_TAG: ${{ inputs.SERVICE2_REF }}
           DOCKERFILE_PATH: ./meta/service2/Dockerfile
           IMAGE_NAME: service2
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
