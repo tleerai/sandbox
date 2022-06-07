@@ -90,9 +90,9 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: ./meta
-
+      - run: ls -lah
       - id: build_image_action
-        uses: ./.github/actions/build-image
+        uses: ../.github/actions/build-image
         with:
           SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
           DOCKERFILE_PATH: ./meta/service2/Dockerfile
