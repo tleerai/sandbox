@@ -71,7 +71,6 @@ jobs:
         working-directory: ./meta
 
       - id: build_image_action
-        uses: ./.github/actions/build-image
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
           SEMVER_TAG: ${{ inputs.SEMVER_TAG }}
