@@ -52,8 +52,13 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
+      - name: Checkout Sandbox
         uses: actions/checkout@v3
+        with:
+          repository: tleerai/sandbox
+          ref: ${{ inputs.SERVICE2_REF }}
+          path: ./meta/service2
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - run: |
           pwd
@@ -86,8 +91,10 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout
+      - name: Checkout Sandbox
         uses: actions/checkout@v3
+        with:
+          repository: tleerai/sandbox
 
       - uses: actions/download-artifact@v3
         with:
