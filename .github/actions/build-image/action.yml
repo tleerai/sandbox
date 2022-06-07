@@ -29,7 +29,7 @@ runs:
     - run: |
         pwd
         ls -lah
-      shell: /bin/bash
+      shell: bash
 
     - name: Build Image
       uses: docker/build-push-action@v2
