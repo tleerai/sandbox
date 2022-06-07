@@ -38,6 +38,11 @@ jobs:
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
+      - run: |
+          ls -lah meta
+          pwd
+          env
+
       - uses: actions/upload-artifact@v3
         with:
           name: repo-artifact
@@ -54,6 +59,9 @@ jobs:
         with:
           name: repo-artifact
           path: ./meta
+
+      - run: env
+      - run: ls -lah meta
 
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
@@ -74,6 +82,9 @@ jobs:
         with:
           name: repo-artifact
           path: ./meta
+
+      - run: env
+      - run: ls -lah meta
 
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
