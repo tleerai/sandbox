@@ -23,9 +23,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: leerai/service1
+          repository: tleerai/service1
           ref: ${{ inputs.SERVICE1_REF }}
           path: ./service1
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - run: ls -lah
       - run: pwd
@@ -37,10 +38,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           repository: tleerai/service2
           ref: ${{ inputs.SERVICE2_REF }}
           path: ./service2
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
 
       - run: ls -lah
       - run: pwd
