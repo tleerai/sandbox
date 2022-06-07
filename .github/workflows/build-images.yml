@@ -62,6 +62,7 @@ jobs:
 
       - run: env
       - run: ls -lah meta
+      - run: ls -lah meta/service2
 
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
