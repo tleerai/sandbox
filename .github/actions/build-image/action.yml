@@ -26,11 +26,6 @@ runs:
         username: ${{ inputs.DOCKERHUB_USERNAME }}
         password: ${{ inputs.DOCKERHUB_TOKEN }}
 
-    - run: |
-        pwd
-        ls -lah
-      shell: bash
-
     - name: Build Image
       uses: docker/build-push-action@v2
       with:
