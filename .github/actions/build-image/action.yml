@@ -46,5 +46,5 @@ runs:
         context: .
         file: ${{ inputs.DOCKERFILE_PATH }}
         push: true
-        tags: "radiusaiinc/${{ inputs.IMAGE_NAME }}:{{ steps.set_docker_tag.outputs.TAG_NAME"
+        tags: "radiusaiinc/${{ inputs.IMAGE_NAME }}:{{ steps.set_docker_tag.outputs.TAG_NAME }}"
 
