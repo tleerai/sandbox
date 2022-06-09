@@ -3,10 +3,7 @@ name: Build Image Workflow
 on:
   workflow_call:
     inputs:
-      SERVICE1_REF:
-        required: true
-        type: string
-      SERVICE2_REF:
+      FEATURE_BRANCH_NAME:
         required: true
         type: string
     secrets:
@@ -22,19 +19,26 @@ jobs:
     name: Clone Repos
     runs-on: ubuntu-20.04
     steps:
+      - run: | # Get commit for the feature branch, if it exists
+          FEATURE_COMMIT=$(git ls-remote --heads git@github.com:tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
+          echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - name: Checkout Service1
         uses: actions/checkout@v3
         with:
           repository: tleerai/service1
-          ref: ${{ inputs.SERVICE1_REF }}
-          path: ./meta/service1
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          ref: ${{ env.FEATURE_BRANCH_COMMIT || develop }} # Checkout the commit of the feature branch, or default
+          path: ./meta/service1 # Clone the repo to this directory
+          token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
+      - run: | # Get commit for the feature branch, if it exists
+          FEATURE_COMMIT=$(git ls-remote --heads git@github.com:tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
+          echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
+      - run: echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - name: Checkout Service2
         uses: actions/checkout@v3
         with:
           repository: tleerai/service2
-          ref: ${{ inputs.SERVICE2_REF }}
+          ref: ${{ inputs.FEATURE_BRANCH_COMMIT || develop }}
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
@@ -48,18 +52,14 @@ jobs:
     name: Service1
     needs: clone_repos
     runs-on: ubuntu-20.04
+    working-directory: ./meta/service1
     steps:
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: repo-artifact
-          path: ./meta
-
+      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
-          DOCKER_TAG: ${{ inputs.SERVICE1_REF }}
-          DOCKERFILE_PATH: ./meta/service1/Dockerfile
+          DOCKER_TAG: ${{ env.TAG_NAME }}
+          DOCKERFILE_PATH: ./Dockerfile
           IMAGE_NAME: service1
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -68,18 +68,14 @@ jobs:
     name: Service2
     needs: clone_repos
     runs-on: ubuntu-20.04
+    working-directory: ./meta/service2
     steps:
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: repo-artifact
-          path: ./meta
-
+      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
-          DOCKER_TAG: ${{ inputs.SERVICE2_REF }}
-          DOCKERFILE_PATH: ./meta/service2/Dockerfile
+          DOCKER_TAG: ${{ env.TAG_NAME }}
+          DOCKERFILE_PATH: ./Dockerfile
           IMAGE_NAME: service2
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
