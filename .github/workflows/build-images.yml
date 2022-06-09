@@ -37,6 +37,7 @@ jobs:
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
+      - id: get_service1
       - run: git --git-dir=./meta/service1/.git rev-parse HEAD
 
       - id: get_service2_feature_commit
@@ -53,12 +54,13 @@ jobs:
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - run: git --git-dir=./meta/$service2/.git rev-parse HEAD
+      - name: Tar files # This preserves case sensitivity and file permissions during artifact upload
+        run: tar -cvf repo_files.tar ./meta
 
       - uses: actions/upload-artifact@v3
         with:
           name: repo-artifact
-          path: ./meta # or ${{ github.workspace }}
+          path: ./repo_files.tar # or ${{ github.workspace }}
           if-no-files-found: error
 
   service1:

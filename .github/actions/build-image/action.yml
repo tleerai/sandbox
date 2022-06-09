@@ -27,18 +27,10 @@ runs:
     - uses: actions/download-artifact@v3
       with:
         name: repo-artifact
-        path: ./meta
+        path: .
 
-    - run: |
-        echo "$GITHUB_WORKSPACE"
-        pwd
-        ls -lah
-        ls -lah ./meta
-        ls -lah ./meta/${{ inputs.REPO_NAME }}
-        stat ./meta/${{ inputs.REPO_NAME }}/.git
-        ls -lah ./meta/${{ inputs.REPO_NAME }}/.git
-        git --git-dir=./meta/${{ inputs.REPO_NAME }}/.git rev-parse HEAD
-        echo "Result: $?"
+    - name: Decompress repo artifact
+      run: tar -xvf repo_files.tar
       shell: bash
 
     - id: set_docker_tag
