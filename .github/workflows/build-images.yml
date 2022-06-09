@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - run: | # Get commit for the feature branch, if it exists
-          FEATURE_COMMIT=$(git ls-remote --heads git@github.com:tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
+          FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - name: Checkout Service1
         uses: actions/checkout@v3
@@ -34,7 +34,7 @@ jobs:
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
       - run: | # Get commit for the feature branch, if it exists
-          FEATURE_COMMIT=$(git ls-remote --heads git@github.com:tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
+          FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - run: echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - name: Checkout Service2
