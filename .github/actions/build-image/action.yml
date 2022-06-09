@@ -29,7 +29,11 @@ runs:
         name: repo-artifact
         path: ./meta
 
-    - run: ls -lahR
+    - run: |
+        echo "$GITHUB_WORKSPACE"
+        pwd
+        ls -lah
+        ls -lah ./meta
       shell: bash
 
     - id: set_docker_tag
