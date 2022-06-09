@@ -22,24 +22,24 @@ jobs:
     name: Clone Repos
     runs-on: ubuntu-20.04
     steps:
-      - id: get_service1_feature_commit
+      - id: get_service1_feature_commit  # Get commit for the feature branch, if it exists
         name: Get Service1 feature commit
-        run: | # Get commit for the feature branch, if it exists
+        run: | 
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
           echo "FEATURE_COMMIT: $FEATURE_COMMIT"
 
-      - name: Checkout Service1
+      - name: Checkout Service1 # Checkout the feature branch commit or the default branch (develop)
         uses: actions/checkout@v3
         with:
           repository: tleerai/service1
-          ref: ${{ steps.get_service1_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }} # Checkout the commit of the feature branch, or default
+          ref: ${{ steps.get_service1_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }} # If this repo has no feature branch, checkout develop
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
-      - id: get_service2_feature_commit
-        name: Get Service1 feature commit
-        run: | # Get commit for the feature branch, if it exists
+      - id: get_service2_feature_commit # Get commit for the feature branch, if it exists
+        name: Get Service2 feature commit
+        run: |
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
           echo "FEATURE_COMMIT: $FEATURE_COMMIT"
@@ -51,7 +51,7 @@ jobs:
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Tar files # This preserves case sensitivity and file permissions during artifact upload
+      - name: Tar files # This preserves case sensitivity and file permissions during artifact upload and prevents corruption of the repo
         run: tar -cvf repo_files.tar ./meta
 
       - uses: actions/upload-artifact@v3
@@ -61,7 +61,7 @@ jobs:
           if-no-files-found: error
 
   service1:
-    name: Service1
+    name: Service1 # Job to actually build the repo
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
