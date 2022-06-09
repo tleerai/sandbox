@@ -9,7 +9,6 @@ on:
       DEFAULT_CHECKOUT:
         required: true
         type: string
-        default: develop
     secrets:
       GH_ACCESS_TOKEN:
         required: true
