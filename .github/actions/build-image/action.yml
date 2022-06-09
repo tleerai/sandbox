@@ -34,6 +34,8 @@ runs:
         pwd
         ls -lah
         ls -lah ./meta
+        ls -lah ./meta/${{ inputs.REPO_NAME }}
+        stat ./meta/${{ inputs.REPO_NAME }}/.git
       shell: bash
 
     - id: set_docker_tag
