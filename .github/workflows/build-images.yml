@@ -62,6 +62,7 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
+      - run: ls -lah
       - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service1/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
@@ -77,6 +78,7 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
+      - run: ls -lah
       - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service2/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
