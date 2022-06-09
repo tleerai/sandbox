@@ -81,5 +81,6 @@ jobs:
         with:
           DOCKERFILE_PATH: ./meta/service2/Dockerfile
           IMAGE_NAME: service2
+          REPO_NAME: service2
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
