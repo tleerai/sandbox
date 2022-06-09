@@ -37,6 +37,8 @@ jobs:
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
+      - run: git --git-dir=./meta/service1/.git rev-parse HEAD
+
       - id: get_service2_feature_commit
         name: Get Service1 feature commit
         run: | # Get commit for the feature branch, if it exists
@@ -50,6 +52,8 @@ jobs:
           ref: ${{ steps.get_service2_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }}
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
+
+      - run: git --git-dir=./meta/$service2/.git rev-parse HEAD
 
       - uses: actions/upload-artifact@v3
         with:
