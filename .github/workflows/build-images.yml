@@ -22,30 +22,31 @@ jobs:
     name: Clone Repos
     runs-on: ubuntu-20.04
     steps:
-      - run: | # Get commit for the feature branch, if it exists
+      - id: get_service1_feature_commit
+        run: | # Get commit for the feature branch, if it exists
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
           echo "FEATURE_COMMIT: $FEATURE_COMMIT"
-          echo "${{ env.FEATURE_BRANCH_COMMIT }}"
+          echo "FEATURE_BRANCH_COMMIT: $FEATURE_BRANCH_COMMIT"
       - name: Checkout Service1
         uses: actions/checkout@v3
         with:
           repository: tleerai/service1
-          ref: ${{ env.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }} # Checkout the commit of the feature branch, or default
+          ref: ${{ steps.get_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }} # Checkout the commit of the feature branch, or default
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
-
+      - id: get_service2_feature_commit
       - run: | # Get commit for the feature branch, if it exists
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
           echo "FEATURE_COMMIT: $FEATURE_COMMIT"
-          echo "${{ env.FEATURE_BRANCH_COMMIT }}"
+          echo "FEATURE_BRANCH_COMMIT: $FEATURE_BRANCH_COMMIT"
       - run: echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
       - name: Checkout Service2
         uses: actions/checkout@v3
         with:
           repository: tleerai/service2
-          ref: ${{ inputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }}
+          ref: ${{ steps.get_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }}
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
