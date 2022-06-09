@@ -23,10 +23,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - id: get_service1_feature_commit
+        name: Get Service1 feature commit
         run: | # Get commit for the feature branch, if it exists
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
           echo "FEATURE_COMMIT: $FEATURE_COMMIT"
+
       - name: Checkout Service1
         uses: actions/checkout@v3
         with:
@@ -34,7 +36,9 @@ jobs:
           ref: ${{ steps.get_service1_feature_commit.outputs.FEATURE_BRANCH_COMMIT || inputs.DEFAULT_CHECKOUT }} # Checkout the commit of the feature branch, or default
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
+
       - id: get_service2_feature_commit
+        name: Get Service1 feature commit
         run: | # Get commit for the feature branch, if it exists
           FEATURE_COMMIT=$(git ls-remote --heads https://tleerai:${{ secrets.GH_ACCESS_TOKEN }}@github.com/tleerai/service2.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
@@ -58,7 +62,7 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service1.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
+      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service1/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
@@ -73,7 +77,7 @@ jobs:
     needs: clone_repos
     runs-on: ubuntu-20.04
     steps:
-      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service2.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
+      - run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service2/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       - id: build_image_action
         uses: tleerai/sandbox/.github/actions/build-image@main
         with:
