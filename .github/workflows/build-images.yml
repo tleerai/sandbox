@@ -19,6 +19,7 @@ jobs:
     name: Clone Repos
     runs-on: ubuntu-20.04
     steps:
+      - run: DEFAULT_CHECKOUT_BRANCH=develop
       - run: | # Get commit for the feature branch, if it exists
           FEATURE_COMMIT=$(git ls-remote --heads git@github.com:tleerai/service1.git ${{ inputs.FEATURE_BRANCH_NAME }} | awk '{print $1; }')
           echo "::set-output name=FEATURE_BRANCH_COMMIT::$FEATURE_COMMIT"
@@ -26,7 +27,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: tleerai/service1
-          ref: ${{ env.FEATURE_BRANCH_COMMIT || develop }} # Checkout the commit of the feature branch, or default
+          ref: ${{ env.FEATURE_BRANCH_COMMIT || $DEFAULT_CHECKOUT_BRANCH }} # Checkout the commit of the feature branch, or default
           path: ./meta/service1 # Clone the repo to this directory
           token: ${{ secrets.GH_ACCESS_TOKEN }} # Needed to authenticate with the remote repository
 
@@ -38,7 +39,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: tleerai/service2
-          ref: ${{ inputs.FEATURE_BRANCH_COMMIT || develop }}
+          ref: ${{ inputs.FEATURE_BRANCH_COMMIT || 'develop' }}
           path: ./meta/service2
           token: ${{ secrets.GH_ACCESS_TOKEN }}
 
