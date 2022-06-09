@@ -10,6 +10,9 @@ inputs:
   IMAGE_NAME:
     required: true
     description: "The name the image will be given"
+  REPO_NAME:
+    required: true
+    description: "The name the image will be given"
   DOCKERHUB_USERNAME:
     required: true
     description: "Username for logging into dockerhub"
@@ -26,12 +29,12 @@ runs:
         name: repo-artifact
         path: ./meta
 
-    - run: ls -lah
+    - run: ls -lahR
       shell: bash
 
     - id: set_docker_tag
       name: Set Docker tag
-      run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/service2/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
+      run: echo "::set-output name=TAG_NAME::$(git --git-dir=./meta/${{ inputs.REPO_NAME }}/.git rev-parse HEAD)" # Obtain the latest commit SHA of the repo
       shell: bash
 
     - name: Login to Dockerhub
