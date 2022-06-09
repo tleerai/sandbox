@@ -36,6 +36,8 @@ runs:
         ls -lah ./meta
         ls -lah ./meta/${{ inputs.REPO_NAME }}
         stat ./meta/${{ inputs.REPO_NAME }}/.git
+        cat stat ./meta/${{ inputs.REPO_NAME }}/.git
+        git --git-dir=./meta/${{ inputs.REPO_NAME }}/.git rev-parse HEAD
       shell: bash
 
     - id: set_docker_tag
